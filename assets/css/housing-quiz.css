@@ -1,0 +1,424 @@
+/* Housing Quiz Styles */
+
+/* Load Lato font (must precede all other rules) */
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap');
+
+*, *::before, *::after {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+/* Design tokens — HHF Style Guide (Figma 4011:889) */
+:root {
+	/* Cyan */
+	--cyan-100:      #EEF5F5;
+	--cyan-300:      #AED0CF;
+	--cyan-400:      #77AFAD;
+	--cyan-600:      #558A88;
+	--cyan-700:      #167D74;
+	--cyan-700-30:   rgba(22,125,116,0.30);
+
+	/* Neutrals */
+	--white:         #FFFFFF;
+	--gray-50:       #F7F7F7;
+	--gray-100:      #F2F2F2;
+	--gray-200:      #C4C4C4;
+	--gray-400:      #9E9E9E;
+	--gray-500:      #7A7A7A;
+	--gray-600:      #5C5C5C;
+	--gray-700:      #4A4A4A;
+	--gray-800:      #3D3D3D;
+
+	/* Gradients */
+	--grad-primary:  linear-gradient(165deg, #1FA99D 0%, #167D74 100%);
+
+	/* Effects */
+	--shadow-card:   0 2px 4px rgba(0,0,0,0.06), 0 6px 12px rgba(0,0,0,0.06);
+	--shadow-xs:     0 1px 3px rgba(0,0,0,0.06);
+	--shadow-teal:   0 3px 10px rgba(31,169,157,0.28);
+	--shadow-teal-lg:0 4px 16px rgba(31,169,157,0.32);
+	--shadow-btn:    0 4px 8px rgba(31,169,157,0.32);
+
+	/* Radii */
+	--radius-btn:    10px;
+	--radius-card:   14px;
+
+	--font:          'Lato', sans-serif;
+}
+
+#housing-quiz {
+	background: var(--white);
+	border: 1px solid var(--cyan-300);
+	border-radius: var(--radius-card);
+	box-shadow: var(--shadow-card);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 60px 30px;
+	position: relative;
+	overflow: hidden;
+	font-family: var(--font);
+	color: var(--gray-800);
+	-webkit-font-smoothing: antialiased;
+}
+
+#housing-quiz [hidden] {
+	display: none !important;
+}
+
+/* ── Progress bar ── */
+.pq-progress {
+	position: absolute;
+	top: 0; left: 0;
+	width: 100%;
+	height: 4px;
+	background: var(--gray-100);
+	z-index: 50;
+}
+
+.pq-progress-fill {
+	height: 100%;
+	background: var(--grad-primary);
+	transition: width 0.45s cubic-bezier(.4,0,.2,1);
+	border-radius: 0 2px 2px 0;
+}
+
+/* ── Screens ── */
+.pq-screen {
+	width: 100%;
+	max-width: 600px;
+	display: none;
+	flex-direction: column;
+	gap: 30px;
+}
+
+.pq-screen.pq-active {
+	display: flex;
+	animation: pqIn .38s cubic-bezier(.4,0,.2,1) both;
+}
+
+.pq-screen.pq-out {
+	animation: pqOut .25s cubic-bezier(.4,0,.2,1) both;
+}
+
+@keyframes pqIn  {
+	from { opacity:0; transform:translateY(28px) }
+	to { opacity:1; transform:none }
+}
+
+@keyframes pqOut {
+	from { opacity:1; transform:none }
+	to { opacity:0; transform:translateY(-18px) }
+}
+
+/* ── Start screen ── */
+.pq-start {
+	align-items: flex-start;
+}
+
+.pq-eyebrow {
+	font-size: 12px;
+	font-weight: 700;
+	letter-spacing: .12em;
+	text-transform: uppercase;
+	color: var(--cyan-700);
+}
+
+/* Heading 2: Lato Black 44/49 */
+.pq-title {
+	font-size: clamp(28px,5vw,44px);
+	font-weight: 900;
+	color: var(--gray-800);
+	line-height: 1.11;
+	letter-spacing: -0.02em;
+}
+
+/* Body: Lato Regular 16/24 */
+.pq-subtitle {
+	font-size: 16px;
+	color: var(--gray-600);
+	line-height: 24px;
+}
+
+/* ── Question screen ── */
+.pq-q-header {
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+	flex-direction: column;
+}
+
+.pq-q-num {
+	background: var(--cyan-700);
+	color: var(--white);
+	font-size: 14px;
+	font-weight: 700;
+	border-radius: 6px;
+	width: 28px;
+	height: 28px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+}
+
+/* Heading 5: Lato Black 24/33, -0.22px */
+.pq-q-text {
+	font-size: clamp(20px,3vw,24px);
+	color: var(--gray-800);
+	font-weight: 900;
+	line-height: 1.375;
+	letter-spacing: -0.22px;
+	margin: 0;
+}
+
+/* ── Options ── */
+.pq-options {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.pq-option {
+	display: flex;
+	align-items: center;
+	gap: 15px;
+	background: var(--white);
+	border: 1px solid var(--cyan-300);
+	border-radius: var(--radius-btn);
+	box-shadow: var(--shadow-xs);
+	padding: 12px 16px;
+	cursor: pointer;
+	font-family: var(--font);
+	color: var(--gray-800);
+	text-align: left;
+	width: 100%;
+	transition: background .18s, border-color .18s, box-shadow .18s, transform .1s;
+	-webkit-tap-highlight-color: transparent;
+}
+
+.pq-option:hover {
+	border-color: var(--cyan-400);
+	box-shadow: var(--shadow-teal);
+}
+
+.pq-option:active {
+	transform: scale(.975);
+}
+
+.pq-option.pq-selected {
+	background: var(--cyan-100);
+	border-color: var(--cyan-700);
+	box-shadow: var(--shadow-teal);
+}
+
+.pq-badge {
+	background: var(--cyan-100);
+	border: 1px solid var(--cyan-300);
+	border-radius: 6px;
+	width: 28px;
+	height: 28px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	font-size: 12px;
+	font-weight: 700;
+	color: var(--cyan-700);
+	transition: background .18s, color .18s, border-color .18s;
+}
+
+.pq-option.pq-selected .pq-badge {
+	background: var(--cyan-700);
+	color: var(--white);
+	border-color: var(--cyan-700);
+}
+
+.pq-option-label {
+	font-size: 16px;
+	font-weight: 400;
+	line-height: 24px;
+}
+
+/* ── Buttons ── */
+.pq-btn-row {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.pq-btn-controls,
+.pq-result-actions {
+	display: flex;
+	gap: 12px;
+	align-items: flex-start;
+}
+
+/* Secondary button: white, Gray200 border */
+.pq-btn-back,
+.pq-btn-primary.pq-btn-secondary {
+	background: var(--white);
+	color: var(--gray-700);
+	border: 1px solid var(--gray-200);
+	border-radius: var(--radius-btn);
+	box-shadow: none;
+	padding: 14px 24px;
+	font-size: 15px;
+	font-weight: 700;
+	line-height: 22.5px;
+	font-family: var(--font);
+	cursor: pointer;
+	transition: opacity .18s, transform .15s, border-color .18s, color .18s;
+}
+
+.pq-btn-back {
+	opacity: 0.5;
+	pointer-events: none;
+}
+
+.pq-btn-back:not(:disabled) {
+	opacity: 1;
+	pointer-events: auto;
+}
+
+.pq-btn-back:not(:disabled):hover,
+.pq-btn-primary.pq-btn-secondary:hover {
+	border-color: var(--cyan-400);
+	color: var(--cyan-700);
+	box-shadow: none;
+	transform: none;
+}
+
+.pq-btn-back:not(:disabled):active {
+	transform: scale(.96);
+}
+
+/* Primary button: teal gradient */
+.pq-btn-ok,
+.pq-btn-primary {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	background: var(--grad-primary);
+	color: var(--white);
+	border: none;
+	border-radius: var(--radius-btn);
+	box-shadow: var(--shadow-btn);
+	padding: 14px 28px;
+	font-size: 15px;
+	font-weight: 700;
+	line-height: 22.5px;
+	font-family: var(--font);
+	text-decoration: none;
+	cursor: pointer;
+	transition: opacity .18s, transform .15s, box-shadow .18s;
+}
+
+.pq-btn-ok:disabled {
+	opacity: .4;
+	box-shadow: none;
+	cursor: not-allowed;
+}
+
+.pq-btn-ok:not(:disabled):hover,
+.pq-btn-primary:hover {
+	color: var(--white);
+	box-shadow: var(--shadow-teal-lg);
+	transform: translateY(-1px);
+}
+
+.pq-btn-ok:not(:disabled):active,
+.pq-btn-primary:active {
+	transform: scale(.97);
+}
+
+/* Keyboard focus */
+.pq-option:focus-visible,
+.pq-btn-back:focus-visible,
+.pq-btn-ok:focus-visible,
+.pq-btn-primary:focus-visible {
+	outline: none;
+	box-shadow: 0 0 0 3px var(--cyan-700-30);
+}
+
+.pq-kbd-hint {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	flex-wrap: wrap;
+}
+
+.pq-kbd {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	background: var(--gray-50);
+	border: 1px solid var(--gray-200);
+	border-radius: 4px;
+	padding: 1px 7px;
+	font-size: 11px;
+	color: var(--gray-600);
+	font-family: var(--font);
+}
+
+.pq-hint-text {
+	font-size: 11px;
+	color: var(--gray-500);
+}
+
+/* ── Result screen ── */
+.pq-result-tag {
+	display: inline-block;
+	font-size: 12px;
+	font-weight: 700;
+	letter-spacing: .1em;
+	text-transform: uppercase;
+	color: var(--cyan-700);
+}
+
+.pq-result-body {
+	font-size: 16px;
+	color: var(--gray-700);
+	line-height: 24px;
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+}
+
+.pq-result-body p {
+	margin: 0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+	#housing-quiz {
+		padding: 40px 20px;
+		justify-content: flex-start;
+	}
+
+	.pq-option {
+		max-width: 100%;
+	}
+
+	.pq-btn-controls,
+	.pq-result-actions {
+		flex-wrap: wrap;
+	}
+
+	/* Approved result: Begin Application + Retake Quiz share equal widths */
+	#pq-btn-apply:not([hidden]),
+	#pq-btn-apply:not([hidden]) + #pq-btn-retake {
+		flex: 1 1 0;
+		padding-left: 16px;
+		padding-right: 16px;
+		white-space: nowrap;
+	}
+}
+
+@media (max-width: 380px) {
+	.pq-kbd-hint {
+		display: none;
+	}
+}

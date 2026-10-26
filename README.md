@@ -1,16 +1,16 @@
-# PrEP Eligibility Quiz WordPress Plugin
+# Housing Eligibility Quiz WordPress Plugin
 
-A WordPress plugin that converts the PrEP Eligibility Quiz into a shortcode-enabled component for WordPress sites.
+A WordPress plugin that converts the Housing Eligibility Quiz into a shortcode-enabled component for WordPress sites.
 
 ## Installation
 
 1. **Upload the plugin folder** to your WordPress site:
    - Navigate to `/wp-content/plugins/`
-   - Upload the `prep-quiz` folder
+   - Upload the `housing-quiz` folder
 
 2. **Activate the plugin** from WordPress Admin:
    - Go to **Plugins** in your WordPress dashboard
-   - Find "PrEP Eligibility Quiz"
+   - Find "Housing Eligibility Quiz"
    - Click **Activate**
 
 ## Usage
@@ -18,8 +18,12 @@ A WordPress plugin that converts the PrEP Eligibility Quiz into a shortcode-enab
 Add the quiz to any page or post using the shortcode:
 
 ```
-[prep_quiz]
+[housing_quiz]
 ```
+
+## Local Preview
+
+Open `preview.html` in a browser to render and interact with the quiz without WordPress. The preview loads the same CSS and JavaScript files used by the plugin, so refresh the page after making changes to those assets.
 
 ## Features
 
@@ -34,13 +38,14 @@ Add the quiz to any page or post using the shortcode:
 ## File Structure
 
 ```
-prep-quiz/
-├── prep-quiz.php           # Main plugin file
+housing-quiz/
+├── housing-quiz.php           # Main plugin file
+├── preview.html            # Standalone local preview
 ├── assets/
 │   ├── css/
-│   │   └── prep-quiz.css   # All styling
+│   │   └── housing-quiz.css   # All styling
 │   └── js/
-│       └── prep-quiz.js    # All quiz logic
+│       └── housing-quiz.js    # All quiz logic
 └── README.md               # This file
 ```
 
@@ -48,7 +53,7 @@ prep-quiz/
 
 ### Changing Colors
 
-Edit the CSS variables in `assets/css/prep-quiz.css`:
+Edit the CSS variables in `assets/css/housing-quiz.css`:
 
 ```css
 :root {
@@ -60,7 +65,7 @@ Edit the CSS variables in `assets/css/prep-quiz.css`:
 
 ### Modifying Questions or Results
 
-Edit the data arrays in `assets/js/prep-quiz.js`:
+Edit the data arrays in `assets/js/housing-quiz.js`:
 
 - `QUESTIONS` array - contains all 8 questions
 - `RESULTS` array - contains the two possible result screens

@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Plugin Name: PrEP Eligibility Quiz
- * Description: An interactive PrEP eligibility screening tool. Use shortcode [prep_quiz] to display.
+ * Plugin Name: Housing Eligibility Quiz
+ * Description: An interactive Housing eligibility screening tool. Use shortcode [housing_quiz] to display.
  * Version: 1.0.0
  * Author: ahfweb
  * License: GPL v2 or later
- * Text Domain: prep-quiz
+ * Text Domain: housing-quiz
  * Domain Path: /languages
  * Requires: 5.0
  * Requires PHP: 7.4
@@ -18,14 +18,14 @@ if (! defined('ABSPATH')) {
 }
 
 // Define plugin constants
-if (! defined('PREP_QUIZ_VERSION')) {
-    define('PREP_QUIZ_VERSION', '1.0.0');
+if (! defined('HOUSING_QUIZ_VERSION')) {
+    define('HOUSING_QUIZ_VERSION', '1.0.0');
 }
-if (! defined('PREP_QUIZ_PATH')) {
-    define('PREP_QUIZ_PATH', plugin_dir_path(__FILE__));
+if (! defined('HOUSING_QUIZ_PATH')) {
+    define('HOUSING_QUIZ_PATH', plugin_dir_path(__FILE__));
 }
-if (! defined('PREP_QUIZ_URL')) {
-    define('PREP_QUIZ_URL', plugin_dir_url(__FILE__));
+if (! defined('HOUSING_QUIZ_URL')) {
+    define('HOUSING_QUIZ_URL', plugin_dir_url(__FILE__));
 }
 
 // Security: Prevent direct file access
@@ -36,31 +36,31 @@ if (! function_exists('add_action')) {
 /**
  * Enqueue plugin scripts and styles
  */
-function prep_quiz_enqueue_assets()
+function housing_quiz_enqueue_assets()
 {
     // Enqueue CSS with version cache busting
     wp_enqueue_style(
-        'prep-quiz-style',
-        PREP_QUIZ_URL . 'assets/css/prep-quiz.css',
+        'housing-quiz-style',
+        HOUSING_QUIZ_URL . 'assets/css/housing-quiz.css',
         array(),
-        PREP_QUIZ_VERSION
+        HOUSING_QUIZ_VERSION
     );
 
     // Enqueue JS with version cache busting
     wp_enqueue_script(
-        'prep-quiz-script',
-        PREP_QUIZ_URL . 'assets/js/prep-quiz.js',
+        'housing-quiz-script',
+        HOUSING_QUIZ_URL . 'assets/js/housing-quiz.js',
         array(),
-        PREP_QUIZ_VERSION,
+        HOUSING_QUIZ_VERSION,
         true
     );
 }
-add_action('wp_enqueue_scripts', 'prep_quiz_enqueue_assets');
+add_action('wp_enqueue_scripts', 'housing_quiz_enqueue_assets');
 
 /**
- * Register the [prep_quiz] shortcode
+ * Register the [housing_quiz] shortcode
  */
-function prep_quiz_shortcode()
+function housing_quiz_shortcode()
 {
     // Return empty if user doesn't have permission to view
     if (! is_user_logged_in() && ! current_user_can('read')) {
@@ -71,7 +71,7 @@ function prep_quiz_shortcode()
     ob_start();
 ?>
 
-    <div id="prep-quiz" role="main" aria-label="PrEP Eligibility Quiz">
+    <div id="housing-quiz" role="main" aria-label="Housing Eligibility Quiz">
 
         <div class="pq-progress" role="progressbar" aria-label="Quiz progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
             <div class="pq-progress-fill" id="pq-prog-fill" style="width:0%"></div>
@@ -103,23 +103,24 @@ function prep_quiz_shortcode()
         <!-- ── RESULT ── -->
         <div class="pq-screen" id="pq-result">
             <span class="pq-result-tag">Your Result</span>
-            <h2 class="pq-result-title" id="pq-res-title"></h2>
-            <div class="pq-divider"></div>
             <div class="pq-result-body" id="pq-res-body"></div>
-            <button class="pq-btn-primary" id="pq-btn-retake">Retake Quiz</button>
+            <div class="pq-result-actions">
+                <a class="pq-btn-primary" id="pq-btn-apply" href="#" hidden>Begin Application</a>
+                <button class="pq-btn-primary" id="pq-btn-retake">Retake Quiz</button>
+            </div>
         </div>
 
-    </div><!-- #prep-quiz -->
+    </div><!-- #housing-quiz -->
 
 <?php
     return ob_get_clean();
 }
-add_shortcode('prep_quiz', 'prep_quiz_shortcode');
+add_shortcode('housing_quiz', 'housing_quiz_shortcode');
 
 /**
  * Add security headers
  */
-function prep_quiz_security_headers()
+function housing_quiz_security_headers()
 {
     if (! is_admin()) {
         header('X-Content-Type-Options: nosniff');
@@ -127,24 +128,24 @@ function prep_quiz_security_headers()
         header('X-XSS-Protection: 1; mode=block');
     }
 }
-add_action('send_headers', 'prep_quiz_security_headers');
+add_action('send_headers', 'housing_quiz_security_headers');
 
 /**
  * Plugin activation hook
  */
-function prep_quiz_activate()
+function housing_quiz_activate()
 {
     // Log activation for debugging
-    error_log('PrEP Quiz Plugin activated on ' . current_time('mysql'));
+    error_log('Housing Quiz Plugin activated on ' . current_time('mysql'));
 }
-register_activation_hook(__FILE__, 'prep_quiz_activate');
+register_activation_hook(__FILE__, 'housing_quiz_activate');
 
 /**
  * Plugin deactivation hook
  */
-function prep_quiz_deactivate()
+function housing_quiz_deactivate()
 {
     // Cleanup if needed
-    error_log('PrEP Quiz Plugin deactivated on ' . current_time('mysql'));
+    error_log('Housing Quiz Plugin deactivated on ' . current_time('mysql'));
 }
-register_deactivation_hook(__FILE__, 'prep_quiz_deactivate');
+register_deactivation_hook(__FILE__, 'housing_quiz_deactivate');

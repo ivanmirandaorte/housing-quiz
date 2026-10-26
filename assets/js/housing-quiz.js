@@ -1,46 +1,37 @@
-/* PrEP Quiz — no tracking, no cookies, no external requests */
+/* Housing Quiz — no tracking, no cookies, no external requests */
 (function () {
 	'use strict';
 
 	/* ── Data ── */
 	var QUESTIONS = [
-		'Are you in a sexual relationship with a partner who is HIV-positive, or do you anticipate having sex with an HIV-positive partner?',
-		'Have you had condomless sex with a partner whose HIV status is unknown or positive in the past six months?',
-		'Have you been diagnosed with a sexually transmitted infection (STI) in the past year?',
-		'Do you use injection drugs and share needles or equipment with others?',
-		'Are you involved in sex work, or have you had sexual partners who engage in sex work?',
-		'Have you had multiple sexual partners in the past year?',
-		'Are you planning to become pregnant, or are you already pregnant and at risk of HIV exposure?',
-		'Do you have a partner who is not consistently taking HIV treatment (ART) or has a detectable viral load?'
+		'Do you have a valid government-issued photo ID?',
+		'Is your monthly household income at least $860–$3,150, depending on the property/unit you are interested in?',
+		'Can you provide current documentation verifying your income?',
+		'Are you willing to complete the required background check as part of the application process?'
 	];
 
 	var OPTIONS = [
-		{ key: 'A', label: 'Yes',      score: 2 },
-		{ key: 'B', label: 'No',       score: 0 },
-		{ key: 'C', label: 'Not Sure', score: 1 }
+		{ key: 'A', label: 'Yes', eligible: true },
+		{ key: 'B', label: 'No',  eligible: false }
 	];
 
-	/* Score 1–16 → result 0 (candidate). Score 0 → result 1 (not immediate). */
-	var RESULTS = [
-		{
-			title: 'You may be a candidate for Pre-Exposure Prophylaxis (PrEP)',
+	/* Any "No" → not eligible. "Yes" to every question → eligible. */
+	var RESULTS = {
+		eligible: {
+			showApply: true,
 			body: [
-				'Based on your responses to the quiz, it appears that you may be a candidate for Pre-Exposure Prophylaxis (PrEP). However, please keep in mind that this quiz is just an initial assessment tool, and the final decision should be made after consulting with a healthcare provider.',
-				'We strongly recommend finding an AHF Wellness Center or AHF Healthcare Center near you or filling out our contact form to discuss PrEP with our Benefits Counselors. They will provide personalized guidance, answer any questions you may have, and determine if PrEP is the right choice for you.'
+				'You have been pre-approved! Please fill out your application.'
 			]
 		},
-		{
-			title: 'You may not be an immediate candidate for PrEP',
+		notEligible: {
 			body: [
-				'Thank you for taking the Pre-Exposure Prophylaxis (PrEP) quiz. Based on your responses, it appears that you may not be an immediate candidate for PrEP. This quiz is an initial screening tool, and your lower-risk answers suggest that you may not currently require PrEP for HIV prevention.',
-				'However, it\'s important to remember that individual circumstances and risks can vary. The decision to use PrEP should be made after a comprehensive evaluation by a healthcare provider. Find an AHF Wellness Center or AHF Healthcare Center near you or fill out our contact form to speak to one of our Benefits Counselors. They can provide further guidance and discuss other methods of HIV prevention that may be more suitable for you.'
+				'At this time you do not meet the pre-qualifications. We welcome you to apply again in future.'
 			]
 		}
-	];
+	};
 
 	/* ── State ── */
 	var currentQ   = 0;
-	var score      = 0;
 	var selected   = null;
 	var answerHistory = []; // Track answers for back navigation
 
@@ -55,7 +46,7 @@
 	var btnOk      = document.getElementById('pq-btn-ok');
 	var btnBack    = document.getElementById('pq-btn-back');
 	var btnRetake  = document.getElementById('pq-btn-retake');
-	var elResTitle = document.getElementById('pq-res-title');
+	var btnApply   = document.getElementById('pq-btn-apply');
 	var elResBody  = document.getElementById('pq-res-body');
 
 	/* ── Progress ── */
@@ -148,13 +139,7 @@
 	function goBack() {
 		if (currentQ <= 0) return;
 		
-		// Restore previous answer and score
 		currentQ--;
-		var prevAnswer = answerHistory[currentQ];
-		if (prevAnswer !== undefined) {
-			score -= OPTIONS[prevAnswer].score;
-		}
-		
 		renderQuestion(currentQ);
 		switchScreen(scQuestion);
 	}
@@ -165,11 +150,17 @@
 		
 		// Store answer in history
 		answerHistory[currentQ] = selected;
-		score += OPTIONS[selected].score;
+
+		// A single "No" ends the quiz
+		if (!OPTIONS[selected].eligible) {
+			showResult(RESULTS.notEligible);
+			return;
+		}
+
 		currentQ++;
 
 		if (currentQ >= QUESTIONS.length) {
-			showResult();
+			showResult(RESULTS.eligible);
 		} else {
 			renderQuestion(currentQ);
 			switchScreen(scQuestion);
@@ -177,11 +168,13 @@
 	}
 
 	/* ── Show result ── */
-	function showResult() {
+	function showResult(result) {
 		setProgress(QUESTIONS.length);
-		var result = score >= 1 ? RESULTS[0] : RESULTS[1];
 
-		elResTitle.textContent = result.title;
+		// Apply link only for eligible results; Retake becomes secondary beside it
+		btnApply.hidden = !result.showApply;
+		btnRetake.classList.toggle('pq-btn-secondary', !!result.showApply);
+
 		elResBody.innerHTML = '';
 		result.body.forEach(function (para) {
 			var p = document.createElement('p');
@@ -195,7 +188,6 @@
 	/* ── Reset ── */
 	function reset() {
 		currentQ = 0;
-		score    = 0;
 		selected = null;
 		answerHistory = [];
 		renderQuestion(0);
@@ -211,7 +203,6 @@
 		var k = e.key.toUpperCase();
 		if      (k === 'A' || k === '1') pick(0);
 		else if (k === 'B' || k === '2') pick(1);
-		else if (k === 'C' || k === '3') pick(2);
 		else if (k === 'ENTER' && selected !== null) { e.preventDefault(); advance(); }
 		else if (k === 'BACKSPACE' && currentQ > 0) { e.preventDefault(); goBack(); }
 	});
